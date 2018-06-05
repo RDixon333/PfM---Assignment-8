@@ -1,0 +1,47 @@
+createdb -U postgres ticketdb
+psql -U postgres ticketdb
+
+
+create table artist (
+  id serial primary key,
+  name varchar (100),
+  genre varchar (100)
+);
+
+create table venues (
+  id serial primary key,
+  artist_id integer not null references artist(id),
+  fake_venue varchar (100),
+  city varchar (100),
+  concert_time varchar (100),
+  concert_date date
+);
+
+create table ticketprices (
+  id serial primary key,
+  venue_id integer not null references venues(id),
+  price varchar (100)
+);
+
+
+insert into artist (name, genre) values ('Carpenter Brut', 'Electronic');
+insert into artist (name, genre) values ('Amon Tobin', 'Electronic');
+insert into artist (name, genre) values ('Volant', 'Electronic');
+
+insert into venues (artist_id, city, fake_venue, concert_time, concert_date) values ('1', 'Los Angeles, CA', 'The Room', '9:00pm to 1:00am', to_date('2018-06-20', 'YYYY-MM-DD'));
+insert into venues (artist_id, city, fake_venue, concert_time, concert_date) values ('2', 'San Francisco, CA', 'Upstairs', '8:00pm to 12:00am', to_date('2018-07-24', 'YYYY-MM-DD'));
+insert into venues (artist_id, city, fake_venue, concert_time, concert_date) values ('3', 'Santa Monica, CA', 'Safyre', '10:00pm to 2:00am', to_date('2018-07-24', 'YYYY-MM-DD'));
+
+insert into ticketprices (venue_id, price) values ('1', '$35.00');
+insert into ticketprices (venue_id, price) values ('2', '$55.00');
+insert into ticketprices (venue_id, price) values ('3', '$25.00');
+
+
+SELECT * FROM venues ve JOIN artist ar ON ve.artist_id = ar.id WHERE ar.name = 'Carpenter Brut';
+SELECT * FROM venues ve JOIN artist ar ON ve.artist_id = ar.id WHERE ar.name = 'Amon Tobin';
+SELECT * FROM venues ve JOIN artist ar ON ve.artist_id = ar.id WHERE ar.name = 'Volant';
+
+
+SELECT * FROM ticketprices tp JOIN venues ve ON tp.venue_id = ve.id WHERE ve.fake_venue = 'The Room';
+SELECT * FROM ticketprices tp JOIN venues ve ON tp.venue_id = ve.id WHERE ve.fake_venue = 'Upstairs';
+SELECT * FROM ticketprices tp JOIN venues ve ON tp.venue_id = ve.id WHERE ve.fake_venue = 'Safyre';
